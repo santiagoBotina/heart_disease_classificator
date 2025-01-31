@@ -1,0 +1,12 @@
+services:
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5434:5434"
+    volumes:
+      - ./data/heart_disease_classificator:/var/lib/postgresql/data
+    command: -p ${DB_PORT}

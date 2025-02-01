@@ -9,3 +9,4 @@ jupyter
 scikit-learn
 python-dotenv
 psycopg2
+mlflow

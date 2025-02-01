@@ -1,4 +1,6 @@
 .idea
 .env
 data/heart_disease_classificator/*
+data/minio_data/*
+data/mlflow/*
 .venv

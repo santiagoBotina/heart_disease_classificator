@@ -20,3 +20,10 @@ app-build:
 
 app-up:
 	docker-compose --env-file .env up -d
+
+run-experiment:
+	@echo "Running experiment: $(F)"
+	@echo "--------------------"
+	python -m src.mlflow.experiments.$(F)
+	@echo "--------------------"
+	@echo "Experiment finished"

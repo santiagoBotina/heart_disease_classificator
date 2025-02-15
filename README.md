@@ -28,7 +28,7 @@ This project is designed to classify whether a patient has heart disease based o
 
 ---
 
-## 🚀 Getting Started
+## 🕹️ Getting Started
 
 ### Prerequisites
 
@@ -46,26 +46,38 @@ Set Up Environment Variables:
 Create a .env file in the root directory with the following content:
 
    ```bash
-   POSTGRES_USER=your_username
-   POSTGRES_PASSWORD=your_password
-   POSTGRES_DB=your_database_name
+   DB_USER=your_username
+   DB_PASS=your_password
+   DB_NAME=your_database_name
+   
    ... Rest of the configuration
    ```
 
 Build and Run the Docker Container:
 
 ```bash
-docker-compose up --build
+docker-compose --env-file .env up --build
 ```
 
 ### Configure Minio:
-Go to localhost:9000 and create the access key and secret key. Paste it into your .env and re-run the docker-compose up --build command.
+1. Go to `localhost:9000` and create the access key and secret key. 
+Paste it into your .env and re-run the `docker-compose --env-file .env up -d --build` command.
+2. Create a bucket named like the `MLFLOW_BUCKET_NAME` environment variable in the Minio dashboard.
 
 ### Apply Database Migrations:
-Run the migration script to set up the database schema and insert sample data:
+Run the `db-setup` command located in the `Makefile` to set up the database schema and insert sample data:
 
 ```bash
-python -m scripts.run_migrations
+make db-setup
+```
+
+### Run experiments:
+Use the commands available in the `Makefile` at the root of the project to run the experiments.  
+The param `F` is the name of the file where the experiment is located, e.g., `knn` for `knn.py` inside
+the `src/mlflow/experiments` folder.
+
+```bash
+make run-experiment F=knn
 ```
 
 ## 🧩 Functionalities
@@ -80,7 +92,7 @@ Model Training: Train a machine learning model using Scikit-learn.
 Prediction: Use the trained model to predict heart disease based on patient data.
 
 3. Dockerized Environment
-Easy Setup: Run the entire project (database, migrations, and scripts) using Docker Compose.
+Easy Setup: Run the entire project (database, object storage, Mlflow, API) using Docker Compose.
 
 Portability: Deploy the project anywhere Docker is supported.
 

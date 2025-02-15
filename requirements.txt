@@ -10,3 +10,4 @@ scikit-learn
 python-dotenv
 psycopg2
 mlflow
+python-dotenv

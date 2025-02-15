@@ -1,8 +1,13 @@
+import logging
 from config.database import DB_CONNECTION
 import csv
 
 
 def insert_csv_to_db():
+    if not DB_CONNECTION:
+        logging.error("Database connection not found, run stopped")
+        return
+
     cursor = DB_CONNECTION.cursor()
 
     with open('../data/heart.csv', 'r') as file:

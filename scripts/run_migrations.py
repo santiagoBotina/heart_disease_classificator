@@ -1,7 +1,12 @@
 import os
+import logging
 from config.database import DB_CONNECTION
 
 def run_migrations():
+    if not DB_CONNECTION:
+        logging.error("Database connection not found, run stopped")
+        return
+
     with DB_CONNECTION.cursor() as cursor:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS migrations (
@@ -16,23 +21,25 @@ def run_migrations():
     migration_files = sorted(os.listdir(migration_dir))
 
     for migration_file in migration_files:
-        if migration_file.endswith('.sql'):
-            # Check if the migration has already been applied
-            with DB_CONNECTION.cursor() as cursor:
-                cursor.execute("SELECT filename FROM migrations WHERE filename = %s", (migration_file,))
-                if cursor.fetchone():
-                    print(f"Skipping already applied migration: {migration_file}")
-                    continue
+        if not migration_file.endswith('.sql'):
+            return
 
-            print(f"Applying migration: {migration_file}")
-            with open(os.path.join(migration_dir, migration_file), 'r') as f:
-                sql_commands = f.read()
+        # Check if the migration has already been applied
+        with DB_CONNECTION.cursor() as cursor:
+            cursor.execute("SELECT filename FROM migrations WHERE filename = %s", (migration_file,))
+            if cursor.fetchone():
+                print(f"Skipping already applied migration: {migration_file}")
+                continue
 
-            # Execute the SQL commands
-            with DB_CONNECTION.cursor() as cursor:
-                cursor.execute(sql_commands)
-                cursor.execute("INSERT INTO migrations (filename) VALUES (%s)", (migration_file,))
-            DB_CONNECTION.commit()
+        print(f"Applying migration: {migration_file}")
+        with open(os.path.join(migration_dir, migration_file), 'r') as f:
+            sql_commands = f.read()
+
+        # Execute the SQL commands
+        with DB_CONNECTION.cursor() as cursor:
+            cursor.execute(sql_commands)
+            cursor.execute("INSERT INTO migrations (filename) VALUES (%s)", (migration_file,))
+        DB_CONNECTION.commit()
 
     print("All migrations applied successfully.")
 

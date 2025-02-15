@@ -1,5 +1,5 @@
 import logging
-from config.database import DB_CONNECTION
+from src.config.database import DB_CONNECTION
 import csv
 
 

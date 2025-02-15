@@ -1,6 +1,6 @@
 import os
 import logging
-from config.database import DB_CONNECTION
+from src.config.database import DB_CONNECTION
 
 def run_migrations():
     if not DB_CONNECTION:

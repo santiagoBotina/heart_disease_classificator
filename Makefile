@@ -5,6 +5,15 @@ db-migrate:
 	@echo "-" * 20
 	@echo "Migration execution finished"
 
+db-seed:
+	@echo "Inserting heart disease data"
+	@echo "-" * 20
+	python -m src.scripts.insert_csv_to_db
+	@echo "-" * 20
+	@echo "Data insertion finished"
+
+db-setup: db-migrate db-seed
+
 
 app-build:
 	docker-compose build --no-cache

@@ -1,7 +1,11 @@
 import logging
+import os
+
 from src.config.database import DB_CONNECTION
 import csv
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CSV_PATH = os.path.join(BASE_DIR, "data", "heart.csv")
 
 def insert_csv_to_db():
     if not DB_CONNECTION:
@@ -10,7 +14,7 @@ def insert_csv_to_db():
 
     cursor = DB_CONNECTION.cursor()
 
-    with open('../data/heart.csv', 'r') as file:
+    with open(CSV_PATH, 'r') as file:
         data_reader = csv.reader(file)
         next(data_reader)
 
@@ -34,7 +38,8 @@ def insert_csv_to_db():
 
     DB_CONNECTION.commit()
     cursor.close()
-    print("Data inserted successfully.")
+
+    logging.info("Data inserted successfully.")
 
 
 if __name__ == "__main__":

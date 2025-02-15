@@ -49,6 +49,7 @@ Create a .env file in the root directory with the following content:
    POSTGRES_USER=your_username
    POSTGRES_PASSWORD=your_password
    POSTGRES_DB=your_database_name
+   ... Rest of the configuration
    ```
 
 Build and Run the Docker Container:
@@ -57,11 +58,14 @@ Build and Run the Docker Container:
 docker-compose up --build
 ```
 
+### Configure Minio:
+Go to localhost:9000 and create the access key and secret key. Paste it into your .env and re-run the docker-compose up --build command.
+
 ### Apply Database Migrations:
 Run the migration script to set up the database schema and insert sample data:
 
 ```bash
-docker-compose exec app python scripts/run_migrations.py
+python -m scripts.run_migrations
 ```
 
 ## 🧩 Functionalities

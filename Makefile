@@ -1,15 +1,15 @@
 db-migrate:
 	@echo "Running migrations"
-	@echo "-" * 20
+	@echo "-" * 40
 	python -m src.scripts.run_migrations
-	@echo "-" * 20
+	@echo "-" * 40
 	@echo "Migration execution finished"
 
 db-seed:
 	@echo "Inserting heart disease data"
-	@echo "-" * 20
+	@echo "-" * 40
 	python -m src.scripts.insert_csv_to_db
-	@echo "-" * 20
+	@echo "-" * 40
 	@echo "Data insertion finished"
 
 db-setup: db-migrate db-seed

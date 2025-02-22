@@ -1,8 +1,13 @@
+import tempfile
+
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report, accuracy_score, recall_score, precision_score
+from sklearn.metrics import classification_report, accuracy_score, recall_score, precision_score, confusion_matrix, \
+    roc_curve
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -20,7 +25,6 @@ if __name__ == "__main__":
     mlflow.set_experiment(MLFLOW_EXPERIMENT_NAME)
 
     df = pd.read_sql_query('select * from heart_disease',con=DB_CONNECTION)
-    print(df.head())
 
     # Preprocessing
     skewed_cols = ['ca', 'oldpeak', 'chol', 'trestbps', 'thalach']
@@ -63,8 +67,41 @@ if __name__ == "__main__":
     mlflow.log_metric("recall", recall)
     mlflow.log_metric("precision", precision)
 
+    # Metrics artifacts
+    # Confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["No Disease", "Disease"],
+                yticklabels=["No Disease", "Disease"])
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.title("Confusion Matrix")
+
+    with tempfile.NamedTemporaryFile(suffix=".png") as tmpfile:
+        plt.savefig(tmpfile.name)
+        mlflow.log_artifact(tmpfile.name, artifact_path="plots")
+
+    plt.close()
+
+    # ROC Curve
+    fpr, tpr, _ = roc_curve(y_test, knn.predict_proba(X_test)[:, 1])
+    plt.figure(figsize=(6, 4))
+    plt.plot(fpr, tpr, label="ROC Curve", color="blue")
+    plt.plot([0, 1], [0, 1], linestyle="--", color="gray")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC Curve")
+    plt.legend()
+
+    with tempfile.NamedTemporaryFile(suffix=".png") as tmpfile:
+        plt.savefig(tmpfile.name)
+        mlflow.log_artifact(tmpfile.name, artifact_path="plots")
+
+    plt.close()
+
     # Set a tag that we can use to remind ourselves what this run was for
-    mlflow.set_tag("Training Info", "KNN Classifier")
+    mlflow.set_tag("category", "classifier")
+    mlflow.set_tag("model", "knn")
 
     # Infer the model signature
     signature = infer_signature(X_train, knn.predict(X_train))

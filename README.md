@@ -23,6 +23,7 @@ This project is designed to classify whether a patient has heart disease based o
 - **Containerization**: Docker, Docker Compose
 - **Data Processing**: Pandas, NumPy
 - **Machine Learning**: Scikit-learn
+- **Model Serving**: FastAPI
 - **Migration Tooling**: Custom Python scripts for SQL migrations
 - **Environment Management**: `.env` files for configuration
 

@@ -1,6 +1,6 @@
 services:
   source_db:
-    restart: always
+    restart: on-failure
     image: postgres:14
     container_name: datasource_db
     environment:
@@ -16,7 +16,7 @@ services:
       - "${DB_PORT}"
 
   mlflow_db:
-    restart: always
+    restart: on-failure
     image: postgres:14
     environment:
       POSTGRES_USER: ${MLFLOW_DB_USER}
@@ -34,7 +34,7 @@ services:
       retries: 3
 
   s3:
-    restart: always
+    restart: on-failure
     image: minio/minio
     container_name: mlflow_minio
     volumes:
@@ -57,7 +57,7 @@ services:
       retries: 3
 
   mlflow:
-    restart: always
+    restart: on-failure
     build: src/mlflow
     image: mlflow_server
     container_name: mlflow_server

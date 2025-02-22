@@ -1,4 +1,17 @@
 services:
+  api:
+    restart: on-failure
+    build: src/api
+    container_name: api
+    depends_on:
+      - mlflow
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_URL=http://mlflow:${MLFLOW_PORT}
+    expose:
+      - "8000"
+
   source_db:
     restart: on-failure
     image: postgres:14

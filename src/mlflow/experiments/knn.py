@@ -114,5 +114,6 @@ if __name__ == "__main__":
         input_example=X_train,
         registered_model_name="knn",
     )
+    mlflow.register_model(f"runs:/{model_info.run_id}/model", "knn")
 
     mlflow.end_run()

@@ -80,6 +80,16 @@ the `src/mlflow/experiments` folder.
 make run-experiment F=knn
 ```
 
+### Run API:
+The model API is served with FastAPI. To run the API, use the following command:
+
+```bash
+fastapi run src/api/main.py --port 3000
+```
+
+Optionally add the flag `--reload` to enable auto-reloading when the source code changes.
+#### note: the docker-compose file is incorrectly configured to run the API, so it must be deleted from the file and run it manually using the above command.
+
 ## 🧩 Functionalities
 1. Database Management
 Schema Creation: SQL migrations to create and update the database schema.
